@@ -156,7 +156,7 @@ function undo(){
 var pop = typedItems.pop();
 document.getElementById('txt').value = typedItems.join("");
 document.querySelector("input[value='" + pop + "']").style.visibility = 'visible'
-if (typedItems.length < 1){document.getElementById('undo').disabled = true}
+if (typedItems.length <= 1){document.getElementById('undo').disabled = true}
 }
 
 
