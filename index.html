@@ -141,27 +141,7 @@ document.getElementById('quiz').innerHTML +=
  }
  
  
- 
- 
- 
- 
- 
- 
 
-
-
-
-
-
-
-function difference(a1,a2) {
-  var result = [];
-  for (var i = 0; i < a1.length; i++) {
-    if (a2.indexOf(a1[i]) === -1) {
-      result.push(a1[i]);}
-  }
-  return result;
-}
 
 
 
@@ -169,6 +149,7 @@ function difference(a1,a2) {
 
 
 var solvedQuestions = [];
+
 
 
 // main function that checks if the answers are true or not.
@@ -187,6 +168,10 @@ for (w = 0; w < Object.keys(words).length; w++){
   if (textWord == Object.keys(words)[w]){
   
   solvedQuestions.push(Object.keys(words)[w]);
+
+  
+
+ 
 
 document.getElementById('txt').value = "";
 level++;
@@ -213,27 +198,35 @@ if (found == false) {undo();}
 };
 
 
-
-
-
-var diffArr = difference(Object.keys(words),solvedQuestions);
-
-
-
+function difference(a1,a2) {
+  var result = [];
+  for (var i = 0; i < a1.length; i++) {
+    if (a2.indexOf(a1[i]) === -1) {
+      result.push(a1[i]);}
+  }
+  return result;
+}
 
 
 
 var splits2 = {};
 var c  = -1;
+var h = 7;
 function help(){
-document.getElementById('unsolved').innerHTML = "<p>مساعدة<br>اضغط على السؤال لتحصل على مساعدة</p><hr>"
+document.getElementById('unsolved').innerHTML = "<p>اضغط على السؤال لتحصل على مساعدة</p><p id='numberOfh'>متبقي عدد مساعدات"+ h +"</p><hr>"
 for (word in words){
+  if(difference(Object.keys(words),solvedQuestions).indexOf(word) > -1){
 document.getElementById('unsolved').innerHTML += "<p onclick='solveIt(this.textContent)'>" + words[word] + "</p>";
+  }
+
 
 if(word.length <= 9){splits2[words[word]] = (word.match(/.{1,3}/g));}
 
 else if (word.length > 9){splits2[words[word]] = (word.match(/.{1,4}/g));}
 }
+
+
+
 
 var modal2 = document.getElementById("helpDiv");
 var span2 = document.getElementsByClassName("close2")[0];
@@ -241,14 +234,14 @@ modal2.style.display = "block";
 span2.onclick = function() {
   modal2.style.display = "none";
   document.getElementById('unsolved').innerHTML ="";
-  document.getElementById('slv').innerHTML ="";
+  document.getElementById('slv').innerHTML ="الحل<br>";
    c  = -1;
 }
 window.onclick = function(event) {
   if (event.target == modal2) {
     modal2.style.display = "none";
 	document.getElementById('unsolved').innerHTML ="";
-	document.getElementById('slv').innerHTML ="";
+	document.getElementById('slv').innerHTML ="الحل<br>";
 	 c  = -1;
   }
 }
@@ -259,9 +252,11 @@ window.onclick = function(event) {
 
 
 function solveIt(valt){
+h--;
 c++;
-if (c < splits2[valt].length){
+if (c < splits2[valt].length && h > -1 ){
 document.getElementById('slv').innerHTML += splits2[valt][c];
+document.getElementById('numberOfh').innerHTML = " متبقي عدد مساعدات :  " + h;
 }
 }
 
@@ -335,7 +330,7 @@ body{text-align:center;width:90%;margin:auto;}
 }
 
 .modal-content span{
-  dispaly: flex;
+  display: flex;
  
 }
 
