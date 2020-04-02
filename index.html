@@ -12,60 +12,60 @@
    <br><br>
    <div id="title">كلمات منسية</div>
    
-  <br><button onclick="createQuestion(3)">المستوى الثاني</button>
+    <div>أنت الآن في المستوى <span id="yourLevel"></span></div>
+	
+	
+  <br><button onclick="createQuestion(0)">المستوى الأول</button>
+      <button onclick="createQuestion(3)">المستوى الثاني</button>
+      <button onclick="createQuestion(6)">المستوى الثالث</button>
+      <button onclick="createQuestion(9)">المستوى الرابع</button>
   
    <br>
    <div id="quiz"></div>
-  
-   <div id="input"><button id="check" onclick="check()">فحـــص</button><button id="undo" disabled="true" onclick="undo()">X</button><input type="text" id="txt"></div>
-  
+ 
+ <!-- <div id="inputtest"></div> -->
+
+   <div id="inputall"><span id="input"></span><button id="undo1" disabled="true" onclick="undo()">X</button>
+   <input type="text" id="txt">
+   <button id="helpBtn" onclick="help()">مساعدة</button>
+   </div>
+  <br> 
+  <div class="center">
    <div id="choices"></div>
+   </div>
+   
    <br> <br>
 
-
-
-
-
-
-
-
-
   <div id="myModal" class="modal">
-  <div class="modal-content">
-    
-	أحسنت.. رائع
-	<hr>
-    <p id="next"></p>
-  </div></div>
+  <div class="modal-content">أحسنت.. رائع<hr><span id="next"></span><span id="back"></span></div>
+  </div>
+  
+  
+
+  <br><br><br>
+  
+  
+ 
+<div id="helpDiv" class="modal2">
+  <div class="modal-content2">
+    <span class="close2">&times;</span>
+    <p id="unsolved"></p>
+	<p id="slv">الحل<br></p>
+  </div>
+</div>
 
 
-
-
-
-
-
-
-
-
-
-   
-   <div id="nextt"></div>
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-<div id="debug" style="font-size:40px"></div>
+  
+  
+  
+  <br><br><br>
 
 </body>
+
+<div id="debug" style="font-size:40px"></div>
+<br><br>
+
+
 <script>
 
 var lvl_0 = {
@@ -89,19 +89,40 @@ var lvl_9 = {
 "المزارع":"يزرع الأرض",
 };
 
-createQuestion(0);
 
-function createQuestion(level){
+
+var ret = localStorage.getItem("level");
+
+
+
+createQuestion(ret);
+
+function createQuestion(va){
+
+ 
+ level = va;
+ 
+ document.getElementById('input').innerHTML = "<button id='check' onclick='check(level)'>فحـــص</button>";
+ 
+document.getElementById('yourLevel').innerHTML = (parseInt(level)+3)/3;
+
+//document.getElementById('debug').innerHTML = level;
+
 words = window["lvl_" + level] ;
+
 document.getElementById('quiz').innerHTML ="";
 document.getElementById('choices').innerHTML="";
 document.getElementById("myModal").style.display = "none";
- 
 // Create Choices 
 var splits = [];
 for (word in words){
 if(word.length <= 9){splits.push(word.match(/.{1,3}/g));}else if (word.length > 9){splits.push(word.match(/.{1,4}/g));}}
 var spreadArray =  [].concat.apply([], splits);
+
+
+////////////////////////////////////////////////////////////
+
+
 spreadArray = spreadArray.sort(() => Math.random() - 0.5); // randomize the array items
 
 // Spread Choices Over Buttons
@@ -111,36 +132,144 @@ document.getElementsByClassName('button')[k].value = spreadArray[k];
 document.getElementsByClassName('button')[k].id = k+"id";}
 
 // create Questions Items
+if (words){
 for(i = 0; i < Object.keys(words).length; i++){
 document.getElementById('quiz').innerHTML +=
  "<span class='number'>" + (i+1) + "- </span>" + " <span class='bold'>" + Object.values(words)[i] + "</span><span class='items'>" + Object.keys(words)[i].length + " أحرف</span><hr>";
  }
  }
+ }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
 
 
-var level = 0;
+
+
+
+
+
+function difference(a1,a2) {
+  var result = [];
+  for (var i = 0; i < a1.length; i++) {
+    if (a2.indexOf(a1[i]) === -1) {
+      result.push(a1[i]);}
+  }
+  return result;
+}
+
+
+
+
+
+
+var solvedQuestions = [];
+
+
 // main function that checks if the answers are true or not.
-function check() {
+
+function check(va) {
+level = va;
 var textWord = document.getElementById('txt').value.toString();
+if (words){
+
+ 
+ 
+var found = false;
 
 for (w = 0; w < Object.keys(words).length; w++){
-if (textWord == Object.keys(words)[w]){
 
-document.getElementById('undo').disabled = true;
+  if (textWord == Object.keys(words)[w]){
+  
+  solvedQuestions.push(Object.keys(words)[w]);
+
+document.getElementById('txt').value = "";
+level++;
+document.getElementById('undo1').disabled = true;
 document.getElementsByClassName('items')[w].innerHTML = "<strong style='color:red'>" + Object.keys(words)[w] + "</strong>";
 document.getElementsByClassName('bold')[w].innerHTML = "<strong style='color:red'>" + Object.values(words)[w] + "</strong>";
 document.getElementsByClassName('number')[w].innerHTML = "<strong style='color:red'>" + "&#10004;" + " - </strong>";
-typedItems = [];
-document.getElementById('txt').value = "";
-level++;
 
-if(level%3 == 0 && level < 10){document.getElementById('next').style.display="block";
-document.getElementById('next').innerHTML ="<button id='nextLevel' onclick='createQuestion(level);'>المرحلة التالية</button>";
-document.getElementById("myModal").style.display = "block";
+if(level%3 == 0 && level < 10 ){document.getElementById('next').style.display="block";
+document.getElementById('next').innerHTML = "<button id='nextLevel' onclick='createQuestion(level);localStorage.setItem("+"&quot;level&quot;"+", level)'> التالي</button><br>";
+document.getElementById('back').innerHTML ="<button id='backLevel' onclick='createQuestion(level-6);'> السابق</button>";
+document.getElementById("myModal").style.display = "block";}
+
+typedItems = [];
+found = true;
+break;
 }
-}else{undo()}
 }
+if (found == false) {undo();}
+}
+
+
+
 };
+
+
+
+
+
+var diffArr = difference(Object.keys(words),solvedQuestions);
+
+
+
+
+
+
+var splits2 = {};
+var c  = -1;
+function help(){
+document.getElementById('unsolved').innerHTML = "<p>مساعدة<br>اضغط على السؤال لتحصل على مساعدة</p><hr>"
+for (word in words){
+document.getElementById('unsolved').innerHTML += "<p onclick='solveIt(this.textContent)'>" + words[word] + "</p>";
+
+if(word.length <= 9){splits2[words[word]] = (word.match(/.{1,3}/g));}
+
+else if (word.length > 9){splits2[words[word]] = (word.match(/.{1,4}/g));}
+}
+
+var modal2 = document.getElementById("helpDiv");
+var span2 = document.getElementsByClassName("close2")[0];
+modal2.style.display = "block";
+span2.onclick = function() {
+  modal2.style.display = "none";
+  document.getElementById('unsolved').innerHTML ="";
+  document.getElementById('slv').innerHTML ="";
+   c  = -1;
+}
+window.onclick = function(event) {
+  if (event.target == modal2) {
+    modal2.style.display = "none";
+	document.getElementById('unsolved').innerHTML ="";
+	document.getElementById('slv').innerHTML ="";
+	 c  = -1;
+  }
+}
+}
+
+
+
+
+
+function solveIt(valt){
+c++;
+if (c < splits2[valt].length){
+document.getElementById('slv').innerHTML += splits2[valt][c];
+}
+}
+
+
+
+
+
+
 
 
 var typedItems = [];
@@ -148,16 +277,17 @@ function typeItem(val,idd){
 document.getElementById(idd).style.visibility = 'hidden';
 typedItems.push(val);
 document.getElementById('txt').value = typedItems.join("");
-document.getElementById('undo').disabled = false;}
-
-
-// Undo button
-function undo(){
-var pop = typedItems.pop();
-document.getElementById('txt').value = typedItems.join("");
-document.querySelector("input[value='" + pop + "']").style.visibility = 'visible'
-if (typedItems.length <= 1){document.getElementById('undo').disabled = true}
+document.getElementById('undo1').disabled = false;
 }
+
+function undo(){
+document.getElementById('txt').value = "";
+ for(t in typedItems){
+document.querySelector("input[value='" + typedItems[t] + "']").style.visibility = 'visible';}
+typedItems = [];
+if (typedItems.length < 1){document.getElementById('undo1').disabled = true;}
+}
+
 
 
 </script>
@@ -166,15 +296,19 @@ if (typedItems.length <= 1){document.getElementById('undo').disabled = true}
 <style>
 *{text-align: center;}
 body{text-align:center;width:90%;margin:auto;}
-div{}
+
 #quiz{margin:5px;text-align:right}
 #txt,#check,#undo{font-size:10px;}
 #txt{width:60%}
 #check{width:20%}
 .items{float:left}
-.button{width:23%;height:40px;text-align:center;margin:2px;border-radius:5px;float:right;}
-#choices{text-align:center;}
+
+.button{min-width:25%;height:40px;text-align:center;margin:2px;border-radius:5px;float:right;}
+
+#choices {text-align:center;margin:auto;}
 #next{display:none}
+
+
 
 /* The Modal (background) */
 .modal {
@@ -189,6 +323,8 @@ div{}
   background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
 }
 
+.center{ text-align: center}
+
 /* Modal Content/Box */
 .modal-content {
   background-color: #fefefe;
@@ -197,6 +333,55 @@ div{}
   border: 1px solid #888;
   width: 70%; /* Could be more or less, depending on screen size */
 }
+
+.modal-content span{
+  dispaly: flex;
+ 
+}
+
+
+
+
+#helpDiv {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.modal-content2 {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close2 {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close2:hover,
+.close2:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+
+
+
 </style>
 
 </html>
