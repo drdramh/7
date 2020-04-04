@@ -20,6 +20,15 @@
      
 	 <div id="prePage"></div>
 	 
+	 <div id="howPlay">
+	 <h3 style="color:red">طريقة اللعب</h3>
+	 <p>1- ستظهر أمامك 7 ألغاز وعليك معرفة الحل من خلال تخمين الكلمة التي تعبر عن كل عبارة</p>
+	 <p>2- قم بقراءة الجملة جيداً ثم اختر الأحرف التي تمثل الكلمة ثم اضغط على زر "فحص"</p>
+   	 <p>3- إذا كانت إجابتك صحيحة سيتم قبولها وإذا كانت خاطئة ستعود الأحرف لأماكنها </p>
+     <p>4- لا يهم أن تحل الجمل بالترتيب,, ابدأ بأي جملة وبالأسهل عليك لتقلل عدد الأحرف ويسهل عليك حل المزيد </p>
+	 <p>5- يمكنك أيضاً ضغط زر مساعدة لتأخذ عدد 14 مساعدة في كل مستويات اللعبة, انتبه عدد المساعدات محدود </p>
+	 </div>
+	 
 <div id="main">
    <div id="quiz"></div>
    
@@ -70,13 +79,22 @@
 
 var objArrayLvl =[
 {
+"تونس":"دولة عربية افريقية",
+"رعاف":"نزيف الأنف",
+"موسكو":"عاصمة روسيا",
+"موسى":"أكثر نبي ورد ذكره بالقرآن",
+"نجاح":"اجتياز الإمتحان والتفوق",
+"رضى":"موافقة وقبول",
+"عنب":"فاكهة لذيذة (عناقيد)",
+},
+{
 "بيروت":"عاصمة دولة عربية",
 "عضلات":"بها يتحرك جسم الإنسان",
 "برتقال":"فاكهة غنية بفيتامين سي",
 "زين الدين زيدان":"لاعب فرنسي من أصول عربية",
 "الزهايمر":"مرض يصيب كبار السن",
 "اليابان":"دولة آسيوية متقدمة",
-"كلينتون":"كان رئيس للولايات المتحدة الأمريكية",
+"جورج بوش":"كان رئيس للولايات المتحدة الأمريكية",
 },
 {
 "الحجاب الحاجز":"العضلة المسؤولة عن التنفس",
@@ -96,7 +114,7 @@ var objArrayLvl =[
 "ابراهيموفيتش":"لاعب كرة قدم سويدي محترف",
 "كالسيوم":"مهم لصحة العظام",
 },
-/*
+
 {
 "aaa":"bbb",
 "aaa":"bbb",
@@ -106,6 +124,7 @@ var objArrayLvl =[
 "aaa":"bbb",
 "aaa":"bbb",
 },
+/*
 {
 "aaa":"bbb",
 "aaa":"bbb",
@@ -122,20 +141,32 @@ if (h == null){h = 14;localStorage.setItem("helpForget", h)};
 if(ret == null){ret = 0};
 
 var ret = localStorage.getItem("level");
+document.getElementById('howPlay').style.display = 'block';
 
 var outerButtons = document.getElementsByClassName('outerbtn');
 for (a = 0; a < objArrayLvl.length; a++){
 document.getElementById('prePage').innerHTML += "<input type='button' class='outerbtn' value='"  + " المستوى " + (a+1) + "' onclick='createQuestion(" + 7*a + ")'>";
-if(a > ret/7 ){outerButtons[a].disabled = true;outerButtons[a].style.opacity = 0.3;}}
+if(a > ret/7 ){
+outerButtons[a].disabled = true;
+outerButtons[a].style.opacity = 0.9;
+outerButtons[a].style.backgroundImage = "url('lock.jpg')";
+outerButtons[a].style.backgroundSize= 'cover';
+outerButtons[a].style.backgroundPosition= "center";
+outerButtons[a].style.color = 'transparent';
+}
+
+}
 
 function backToMain(){
 location = location;
 document.getElementById('prePage').style.display = 'block';
+document.getElementById('howPlay').style.display = 'block';
 document.getElementById('main').style.display = 'none';
 document.getElementById('backMain').style.display = 'none';
 //document.getElementById('ylvl').style.display = 'none'; 
 }
 function createQuestion(va){
+document.getElementById('howPlay').style.display = 'none';
 document.getElementById('prePage').style.display = 'none';
 document.getElementById('backMain').style.display = 'block';
 //document.getElementById('ylvl').style.display = 'block'; 
@@ -262,7 +293,6 @@ document.getElementById('sndclick').playbackRate=2;
 document.getElementById('sndclick').play();
 document.getElementById('sndclick').volume = 0.1;
 document.getElementById(idd).style.visibility = 'hidden';
-document.getElementById(idd).classList.add("clicked");
 typedItems.push(val);
 document.getElementById('txt').value = typedItems.join("");
 document.getElementById('undo1').disabled = false;
@@ -271,7 +301,8 @@ function undo(){
 document.getElementById('txt').value = "";
 for(t in typedItems){
 document.querySelector("input[value='" + typedItems[t] + "']").style.visibility = 'visible';}
- //document.getElementsByClassName("clicked")[t].style.visibility = 'visible';}    تحتاج إعادة نظر وتجربتها خارجياً
+             
+//document.getElementsByClassName("visible")[t].style.visibility = 'visible';}   
 typedItems = [];
 if (typedItems.length < 1){document.getElementById('undo1').disabled = true;}
 };
@@ -282,6 +313,7 @@ if (typedItems.length < 1){document.getElementById('undo1').disabled = true;}
 
 
 <style>
+#howPlay{text-align:right;width:85%;margin:auto;padding:4px;border-radius:5px; background:#fff;display:none;}
 
 #main, #backMain, #ylvl{display:none;text-align:center;margin:auto;}
 
