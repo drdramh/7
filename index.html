@@ -22,12 +22,14 @@
 	 
 <div id="main">
    <div id="quiz"></div>
+   
    <div class="inputall">
    <span id="input"></span>
    <button id="undo1" disabled="true" onclick="undo()">X</button>
    <input type="text" id="txt">
    <button id="helpBtn" onclick="help()">مساعدة</button>
    </div>
+   
    <div id="choices"></div>
   
 </div>
@@ -58,7 +60,6 @@
 
  <footer class="footer">
  <br><input id="backMain" type="button" value="العودة للرئيسية" class="outerbtn2" onclick="backToMain()">
-	 3
  <p>All Rights Reserved</p>
  </footer>
 
@@ -94,7 +95,17 @@ var objArrayLvl =[
 "انسجام":"تفاهم وتناغم",
 "ابراهيموفيتش":"لاعب كرة قدم سويدي محترف",
 "كالسيوم":"مهم لصحة العظام",
-},/*
+},
+/*
+{
+"aaa":"bbb",
+"aaa":"bbb",
+"aaa":"bbb",
+"aaa":"bbb",
+"aaa":"bbb",
+"aaa":"bbb",
+"aaa":"bbb",
+},
 {
 "aaa":"bbb",
 "aaa":"bbb",
@@ -330,12 +341,19 @@ body {
     line-height:10px;
     font-size:0.9em;
    }
+   
+    #choices {
+	   text-align:center;
+	    margin:auto;
+		z-index: 1;
+		margin-bottom:30px;
+		}
 
   .button{
   color:#fff;
   font-size:1.4em;
   min-width:23%;
-  height:45px;
+  height:10%;
   text-align:center;
   margin:3px;
   border: transparent;
@@ -347,6 +365,7 @@ body {
   background: #045FB4;
   font-family: Amiri;
   box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.12);
+  z-index: 1;
   }
   
   
@@ -380,7 +399,7 @@ body {
 
   .items{float:left}
 
-  #choices {text-align:center;margin:auto;}
+ 
 
 
 
@@ -420,7 +439,7 @@ body {
   }
   
   #nextLevel{
-     
+     width:50%;
      background-color: blue;
 	 border: 0px;
 	 border-radius:5px;
@@ -579,7 +598,7 @@ a {
 }
 
   .footer {
-  position: absolute;
+  margin-top:40px;
   font-size: 13px;
   bottom: 10px;
   text-align:center;
