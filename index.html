@@ -53,7 +53,12 @@
   <div class="modal-content2">
     <span class="close2">&times;</span>
     <p id="unsolved"></p>
-	<p id="slv">الحل<br></p>
+	
+	<p id="solving"><br></p>
+	
+	<p id="forSolve"><br></p>
+	
+	<div>الحل<p id="slv"></p></div>
   </div>
 </div>
 
@@ -99,7 +104,7 @@ var objArrayLvl =[
 {
 "الحجاب الحاجز":"العضلة المسؤولة عن التنفس",
 "بلجيكا":"دولة أوروبية",
-"التمساح":"من أضخم الزواحف الحية ولا يستطيع اخراج لسانه",
+"التمساح":"من أضخم الزواحف ولا يستطيع إخراج لسانه",
 "الفجر":"سورة في القرآن",
 "محمد صلاح":"لاعب كرة مصري محترف",
 "اسقربوط":"مرض بسبب نقص فيتامين سي",
@@ -107,7 +112,7 @@ var objArrayLvl =[
 },
 {
 "متوازيان":"لا يتقابلان أبدا",
-"المتنبي":"الشاعر صاحب قول أنا الذي نظر الأعمى إلى أدبي",
+"المتنبي":"من قال أنا الذي نظر الأعمى إلى أدبي",
 "موريتانيا":"دولة عربية أفريقية",
 "بونس ايريس":"عاصمة الأرجنتين",
 "انسجام":"تفاهم وتناغم",
@@ -142,7 +147,6 @@ var objArrayLvl =[
 "aaa":"bbb",
 "aaa":"bbb",
 },
-
 {
 "aaa":"bbb",
 "aaa":"bbb",
@@ -175,7 +179,6 @@ outerButtons[a].style.backgroundSize= 'cover';
 outerButtons[a].style.backgroundPosition= "center";
 outerButtons[a].style.color = 'transparent';
 }
-
 }
 
 function backToMain(){
@@ -186,8 +189,6 @@ main.style.display = 'none';
 backMain.style.display = 'none';
 
 }
-
-
 
 function createQuestion(va){
 var quiz     = document.getElementById('quiz');
@@ -226,20 +227,13 @@ document.getElementsByClassName('button')[k].id     = k + "id";}
 if (words){
 for(i = 0; i < Object.keys(words).length; i++){
 quiz.innerHTML +=
- "<span class='number'>" + (i+1) + "- </span>" + " <span class='bold'>" + Object.values(words)[i] + "</span><span class='items'>" + Object.keys(words)[i].length + " أحرف</span><hr>";
+ "<span class='number'>" + (i+1) + "- </span><span class='description'>" + Object.values(words)[i] + "</span><span class='items'>" + Object.keys(words)[i].length + " أحرف</span><hr>";
 
 nxtlvl.play();
 nxtlvl.volume = 0.2;
 nxtlvl.playbackRate = 2;
  }}} 
 var solvedQuestions = [];
-
-
-
-
-
-
-
 
 
 // main function that checks if the answers are true or not.
@@ -250,6 +244,7 @@ level = va;
 var textWord = document.getElementById('txt').value.toString();
 
 var rightAns = document.getElementById('rightAns');
+rightAns.muted = false;
 var wrongAns = document.getElementById('wrongAns');
 var next = document.getElementById('next');
 var helpBtn = document.getElementById('helpBtn');
@@ -267,10 +262,8 @@ document.getElementById('txt').value = "";
 level++;
 undo1.disabled = true;
 document.getElementsByClassName('items')[w].innerHTML  = "<strong style='color:red'>" + Object.keys(words)[w] + "</strong>";
-document.getElementsByClassName('bold')[w].innerHTML   = "<strong style='color:red'>" + Object.values(words)[w] + "</strong>";
-document.getElementsByClassName('number')[w].innerHTML = "<strong style='color:red'>" + "&#10004;" + " - </strong>";
-
-
+document.getElementsByClassName('description')[w].innerHTML   = "<strong style='color:red'>" + Object.values(words)[w] + "</strong>";
+document.getElementsByClassName('number')[w].innerHTML = "<strong style='color:red'>&#10004; - </strong>";
 
 rightAns.play();
 rightAns.volume = 0.1;
@@ -299,10 +292,6 @@ setTimeout(function(){helpBtn.classList.remove("shk"); }, 1000);
 };
 
 
-
-
-
-
 function difference(a1,a2) {
   var result = [];
   for (var i = 0; i < a1.length; i++) {
@@ -311,19 +300,26 @@ function difference(a1,a2) {
   }
   return result;
 }
+
+
 var splits2 = {};
 var c  = -1;
 if(h !== null){h = localStorage.getItem("helpForget")}else{h=14}; 
+
 function help(){
+document.getElementById('solving').innerHTML   = "";
+
 var unsolved  = document.getElementById('unsolved');
 var slv  = document.getElementById('slv');
 unsolved.innerHTML = "<p>اضغط على السؤال لتحصل على مساعدة</p><p id='numberOfh'>متبقي عدد مساعدات"+ h +"</p><hr>"
 for (word in words){
   if(difference(Object.keys(words),solvedQuestions).indexOf(word) > -1){
-unsolved.innerHTML += "<p class='unslvd' onclick='solveIt(this.textContent)'>" + words[word] + "</p>";
+  
+document.getElementById('forSolve').innerHTML += "<input type='button' class='unslvd' onclick='solveIt(this.value)' value='" + words[word] + "'>";
+
   };
 splits2[words[word]] = word.match(/.{1,3}/g);
-//if(word.length <= 9){splits2[words[word]] = (word.match(/.{1,3}/g));}else if (word.length > 9){splits2[words[word]] = (word.match(/.{1,4}/g));}
+
 }
 var modal2 = document.getElementById("helpDiv");
 var span2 = document.getElementsByClassName("close2")[0];
@@ -332,53 +328,58 @@ modal2.style.display = "block";
 span2.onclick = function() {
   modal2.style.display = "none";
   unsolved.innerHTML ="";
-  slv.innerHTML ="الحل<br>";
+  slv.innerHTML ="<br>";
    c  = -1;
 }
 window.onclick = function(event) {
   if (event.target == modal2) {
     modal2.style.display = "none";
 	unsolved.innerHTML ="";
-	slv.innerHTML ="الحل<br>";
+	slv.innerHTML ="<br>";
 	 c  = -1;
   }}}
+  
+
 function solveIt(valt){
+
+document.getElementById('forSolve').innerHTML  = "";
+document.getElementById('solving').innerHTML   = "<input type='button' class='unslvd' onclick='solvingIt(this.value)' value='" + valt + "'>";
+}
+
+function solvingIt(vall){
+document.getElementById('forSolve').innerHTML = "";
+//
 c++;
 if(h>0){
 h--;
 localStorage.setItem("helpForget", h);
-if (c < splits2[valt].length && h > -1 ){
-slv.innerHTML += splits2[valt][c];
+if (c < splits2[vall].length && h > -1 ){
+slv.innerHTML += splits2[vall][c];
 document.getElementById('numberOfh').innerHTML = " متبقي عدد مساعدات :  " + h;
-}}}
+}
+if (splits2[vall].length == 0){document.getElementById('solving').innerHTML   = "";};
+}
+
+}
 
 var typedItems = [];
-
-
-
 function typeItem(val,idd){
-
 var sndclick  = document.getElementById('sndclick');
-
 sndclick.playbackRate=2;
 sndclick.play();
 sndclick.volume = 0.1;
 document.getElementById(idd).style.visibility = 'hidden';
+document.getElementById(idd).classList.add('visible');
 typedItems.push(val);
 document.getElementById('txt').value = typedItems.join("");
 document.getElementById('undo1').disabled = false;
 }
 
 
-
-
-
-
 function undo(){
 document.getElementById('txt').value = "";
-for(t in typedItems){
+for(t = 0; t < typedItems.length; t++){
 document.querySelector("input[value='" + typedItems[t] + "']").style.visibility = 'visible';}
-             
 //document.getElementsByClassName("visible")[t].style.visibility = 'visible';}   
 typedItems = [];
 if (typedItems.length < 1){undo1.disabled = true;}
@@ -394,88 +395,93 @@ if (typedItems.length < 1){undo1.disabled = true;}
 
 #main, #backMain, #ylvl{display:none;text-align:center;margin:auto;}
 
-.outerbtn, .outerbtn2{
-margin:10px;
-font-size:1em;
-min-width:23%;
-height:50px;
-text-align:center;
-border: transparent;
-border-radius:5px;
-padding: 5px;
-border: 1 px;
-cursor: pointer;
-background: yellow;
-font-family: Tajawal;
-box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.3);
+.outerbtn, .outerbtn2  {
+            margin:10px;
+			font-size:1em;
+			min-width:23%;
+			height:50px;
+			text-align:center;
+			border: transparent;
+			border-radius:5px;
+			padding: 5px;
+			border: 1 px;
+			cursor: pointer;
+			background: yellow;
+			font-family: Tajawal;
+			box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.3);
 
+			}
 
-
-}
-
-	 *{
- 
-  padding: 0;
-  font-family: Tajawal;
-  box-sizing: border-box;
-}
+*	{
+            padding: 0;
+			font-family: Tajawal;
+			box-sizing: border-box;
+			}
 
 
 
 body {
-  margin:auto;
-  width: 40%;
-  text-align: center;
-  position: relative;
-  background: #81F7F3;
-  background-size: cover;
-  word-break: break-word;
-  font-family: 'Tajawal', sans-serif;
+			margin:auto;
+			width: 60%;
+			text-align: center;
+			position: relative;
+			background: #81F7F3;
+			background-size: cover;
+			word-break: break-word;
+			font-family: 'Tajawal', sans-serif;
 }
 
 .header {
-  font-size:15px;
-  line-height:50px;
-  padding: 0px 20px;
-  margin-bottom: 20px;
-  background: orange;
-  box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.2);
-}
+			font-size:15px;
+			line-height:50px;
+			padding: 0px 20px;
+			margin-bottom: 20px;
+			background: orange;
+			box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.2);
+		}
 
 
 
-#quiz{
-    margin:2px;
-    text-align:right;
-    line-height:10px;
-    font-size:0.9em;
-   }
-   
-    #choices {
+#quiz  {
+			margin:2px;
+			text-align:right;
+			line-height:10px;
+			font-size:0.75em;
+			
+       }
+	
+.description  {
+     
+	 
+	 word-wrap: break-word;
+
+      }	
+	
+#choices {
 	   text-align:center;
 	    margin:auto;
 		z-index: 1;
 		margin-bottom:30px;
 		}
 
-  .button{
-  color:#fff;
-  font-size:1.4em;
-  min-width:23%;
-  height:8%;
-  text-align:center;
-  margin:3px;
-  border: transparent;
-  border-radius:5px;
-  display: inline-block;
-  outline: 0;
-  border: 0 px;
-  cursor: pointer;
-  background: #045FB4;
-  font-family: Amiri;
-  box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.12);
-  z-index: 1;
-  }
+.button{
+      color:#fff;
+      font-size:1.4em;
+      min-width:23%;
+      height:8%;
+      text-align:center;
+      margin:3px;
+      border: transparent;
+      border-radius:5px;
+      display: inline-block;
+      outline: 0;
+      border: 0 px;
+      cursor: pointer;
+      background: #045FB4;
+      font-family: Amiri;
+      box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.12);
+      z-index: 1;
+    }
   
   
 
@@ -489,37 +495,36 @@ body {
 
   
   
- .inputall{display:inline-block; width:100%;}
+.inputall{display:inline-block; width:100%;}
   
   
   
-  #txt,#check,#undo1,#helpBtn{font-size:0.7em;line-height:35px;border-radius:5px;text-align:center;border:1px #000 solid;font-weight:bold;}
+#txt,#check,#undo1,#helpBtn{
+     font-size:0.7em;line-height:35px;border-radius:5px;
+	 text-align:center;border:1px #000 solid;font-weight:bold;
   
-  #txt{width:55%;font-size:1em;}
-  
-  #check{width:15%;background: orange;cursor: pointer; box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.12);}
-  
-  #undo1{width:8%;font-weight:bold;background: red;cursor: pointer; box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.12);color:#fff;}
-  
-  #helpBtn{border-radius:5px;background: orange;padding:0px 1px;cursor: pointer; box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.12);}
-  
-  .btn{font-size:9px;border-radius:5px;text-align:center;border:0px;padding:1px;cursor: pointer;background: #045FB4;color:#fff; box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.12);}
-  
-
-  .items{float:left}
-
- 
+    }
 
 
+#txt{width:55%;font-size:1em;}
+  
+#check{width:15%;background: orange;cursor: pointer; box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.12);}
+  
+#undo1{width:8%;font-weight:bold;background: red;cursor: pointer; box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.12);color:#fff;}
+  
+#helpBtn{border-radius:5px;background: orange;padding:0px 1px;cursor: pointer; box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.12);}
+  
+.btn{font-size:9px;border-radius:5px;text-align:center;border:0px;padding:1px;cursor: pointer;background: #045FB4;color:#fff; box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.12);}
+  
 
-
+.items{float:left}
 
   .modal {
     display: none; 
     position:fixed;
     z-index: 1;
     top:30%;
-    margin: 5%;
+    left: 5%;
 	text-align:center;
     width: 90%; 
     height: 30%; 
@@ -688,7 +693,7 @@ a {
 @media only screen and (max-width: 700px) {
   
   body {
-  width: 100%;
+  width: 98%;
 }
 
 .bttn{
