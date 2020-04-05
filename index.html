@@ -220,6 +220,7 @@ document.getElementsByClassName('bold')[w].innerHTML   = "<strong style='color:r
 document.getElementsByClassName('number')[w].innerHTML = "<strong style='color:red'>" + "&#10004;" + " - </strong>";
 document.getElementById('rightAns').play();
 document.getElementById('rightAns').volume = 0.1;
+document.getElementById('rightAns').playbackRate=2;
 if(level%7 == 0 && level < 7*objArrayLvl.length && level > localStorage.getItem("level")){document.getElementById('next').style.display="block";
 document.getElementById('next').innerHTML = 
 "<button id='nextLevel' onclick='createQuestion(level);localStorage.setItem("+"&quot;level&quot;"+", level);'> المستوى التالي</button><br>";
@@ -227,6 +228,7 @@ document.getElementById("myModal").style.display = "block";
 document.getElementById('rightAns').muted = true;
 document.getElementById('nxtlvl').play();
 document.getElementById('nxtlvl').volume = 0.3;
+
 }
 typedItems = [];
 found = true;
@@ -439,14 +441,14 @@ body {
 
   .modal {
     display: none; 
-    position: fixed; 
+    position:fixed;
     z-index: 1;
     top:30%;
-    margin: auto;
+    margin: 5%;
 	text-align:center;
-	right:25%;
-    width: 40%; 
-    height: 30%; 
+	
+    width: 90%; 
+    height: 50%; 
     background-color: rgb(0,0,0); 
     background-color: rgba(0,0,0,0.4); 
   }
