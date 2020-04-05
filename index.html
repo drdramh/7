@@ -15,7 +15,7 @@
 <body>
    <div class="header">
     <a href="#"><img alt="Forgetten Words" src="https://i.imgur.com/hrwkzuS.png" style="width: 20px;margin-top: 7px;">لعبة تخمين الكلمات</a>
-  <!--  <span id="ylvl"> المستوى <span id="yourLevel"></span></span> -->
+ 
   </div>
      
 	 <div id="prePage"></div>
@@ -141,11 +141,14 @@ if (h == null){h = 14;localStorage.setItem("helpForget", h)};
 if(ret == null){ret = 0};
 
 var ret = localStorage.getItem("level");
-document.getElementById('howPlay').style.display = 'block';
+var howPlay = document.getElementById('howPlay');
+var prePage = document.getElementById('prePage');
+
+howPlay.style.display = 'block';
 
 var outerButtons = document.getElementsByClassName('outerbtn');
 for (a = 0; a < objArrayLvl.length; a++){
-document.getElementById('prePage').innerHTML += "<input type='button' class='outerbtn' value='"  + " المستوى " + (a+1) + "' onclick='createQuestion(" + 7*a + ")'>";
+prePage.innerHTML += "<input type='button' class='outerbtn' value='"  + " المستوى " + (a+1) + "' onclick='createQuestion(" + 7*a + ")'>";
 if(a > ret/7 ){
 outerButtons[a].disabled = true;
 outerButtons[a].style.opacity = 0.9;
@@ -159,51 +162,81 @@ outerButtons[a].style.color = 'transparent';
 
 function backToMain(){
 location = location;
-document.getElementById('prePage').style.display = 'block';
-document.getElementById('howPlay').style.display = 'block';
-document.getElementById('main').style.display = 'none';
-document.getElementById('backMain').style.display = 'none';
-//document.getElementById('ylvl').style.display = 'none'; 
+prePage.style.display = 'block';
+howPlay.style.display = 'block';
+main.style.display = 'none';
+backMain.style.display = 'none';
+
 }
+
+
+
 function createQuestion(va){
-document.getElementById('howPlay').style.display = 'none';
-document.getElementById('prePage').style.display = 'none';
-document.getElementById('backMain').style.display = 'block';
-//document.getElementById('ylvl').style.display = 'block'; 
-document.getElementById('main').style.display = 'block';
+var quiz     = document.getElementById('quiz');
+var choices  = document.getElementById('choices');
+var myModal  = document.getElementById('myModal');
+var backMain = document.getElementById('backMain');
+var main     = document.getElementById('main');
+var nxtlvl = document.getElementById('nxtlvl');
+
+howPlay.style.display = 'none';
+prePage.style.display = 'none';
+backMain.style.display = 'block';
+main.style.display = 'block';
 level = va;
 document.getElementById('input').innerHTML = "<button id='check' onclick='check(level)'>فحـــص</button>";
-//document.getElementById('yourLevel').innerHTML = (level/3) + 1;
+
 words = objArrayLvl[level/7];
-document.getElementById('quiz').innerHTML        ="";
-document.getElementById('choices').innerHTML     ="";
-document.getElementById("myModal").style.display = "none";
+quiz.innerHTML        = "";
+choices.innerHTML     = "";
+myModal.style.display = "none";
 // Create Choices 
 var splits = [];
 for (word in words){
 splits.push(word.match(/.{1,3}/g));}
 //if(word.length <= 9){splits.push(word.match(/.{1,3}/g));}else if (word.length > 9){splits.push(word.match(/.{1,4}/g));}}
 var spreadArray =  [].concat.apply([], splits);
+
+
 spreadArray = spreadArray.sort(() => Math.random() - 0.5); // randomize the array items
 // Spread Choices Over Buttons
 for(k=0;k < spreadArray.length; k++){
-document.getElementById('choices').innerHTML       += "<input type='button' class='button popup5' value='Choices' onclick='typeItem(this.value,this.id)'>";
+choices.innerHTML       += "<input type='button' class='button popup5' value='Choices' onclick='typeItem(this.value,this.id)'>";
 document.getElementsByClassName('button')[k].value  = spreadArray[k];
-document.getElementsByClassName('button')[k].id     = k+"id";}
+document.getElementsByClassName('button')[k].id     = k + "id";}
 // create Questions Items
 if (words){
 for(i = 0; i < Object.keys(words).length; i++){
-document.getElementById('quiz').innerHTML +=
+quiz.innerHTML +=
  "<span class='number'>" + (i+1) + "- </span>" + " <span class='bold'>" + Object.values(words)[i] + "</span><span class='items'>" + Object.keys(words)[i].length + " أحرف</span><hr>";
- document.getElementById('nxtlvl').play();
-document.getElementById('nxtlvl').volume = 0.2;
-document.getElementById('nxtlvl').playbackRate=2;
+
+nxtlvl.play();
+nxtlvl.volume = 0.2;
+nxtlvl.playbackRate = 2;
  }}} 
 var solvedQuestions = [];
+
+
+
+
+
+
+
+
+
 // main function that checks if the answers are true or not.
 function check(va) {
 level = va;
+
+
 var textWord = document.getElementById('txt').value.toString();
+
+var rightAns = document.getElementById('rightAns');
+var wrongAns = document.getElementById('wrongAns');
+var next = document.getElementById('next');
+var helpBtn = document.getElementById('helpBtn');
+var undo1 = document.getElementById('undo1');
+
 if (words){
 var found = false;
 for (w = 0; w < Object.keys(words).length; w++){
@@ -211,23 +244,26 @@ for (w = 0; w < Object.keys(words).length; w++){
   if (textWord == Object.keys(words)[w]){
   
 solvedQuestions.push(Object.keys(words)[w]);
+
 document.getElementById('txt').value = "";
 level++;
-//document.getElementById('dbg').innerHTML = level;
-document.getElementById('undo1').disabled = true;
+undo1.disabled = true;
 document.getElementsByClassName('items')[w].innerHTML  = "<strong style='color:red'>" + Object.keys(words)[w] + "</strong>";
 document.getElementsByClassName('bold')[w].innerHTML   = "<strong style='color:red'>" + Object.values(words)[w] + "</strong>";
 document.getElementsByClassName('number')[w].innerHTML = "<strong style='color:red'>" + "&#10004;" + " - </strong>";
-document.getElementById('rightAns').play();
-document.getElementById('rightAns').volume = 0.1;
-document.getElementById('rightAns').playbackRate=2;
-if(level%7 == 0 && level < 7*objArrayLvl.length && level > localStorage.getItem("level")){document.getElementById('next').style.display="block";
-document.getElementById('next').innerHTML = 
+
+
+
+rightAns.play();
+rightAns.volume = 0.1;
+rightAns.playbackRate = 2;
+if(level%7 == 0 && level < 7*objArrayLvl.length && level > localStorage.getItem("level")){next.style.display="block";
+next.innerHTML = 
 "<button id='nextLevel' onclick='createQuestion(level);localStorage.setItem("+"&quot;level&quot;"+", level);'> المستوى التالي</button><br>";
-document.getElementById("myModal").style.display = "block";
-document.getElementById('rightAns').muted = true;
-document.getElementById('nxtlvl').play();
-document.getElementById('nxtlvl').volume = 0.3;
+myModal.style.display = "block";
+rightAns.muted = true;
+nxtlvl.play();
+nxtlvl.volume = 0.3;
 
 }
 typedItems = [];
@@ -236,13 +272,19 @@ break;
 }
 }
 if (found == false) {undo();
-document.getElementById('wrongAns').play();
-document.getElementById('wrongAns').volume = 0.5;
-document.getElementById('helpBtn').classList.add("shk");
-setTimeout(function(){ document.getElementById('helpBtn').classList.remove("shk"); }, 1000);
+wrongAns.play();
+wrongAns.volume = 0.5;
+helpBtn.classList.add("shk");
+setTimeout(function(){helpBtn.classList.remove("shk"); }, 1000);
 }
 }
 };
+
+
+
+
+
+
 function difference(a1,a2) {
   var result = [];
   for (var i = 0; i < a1.length; i++) {
@@ -255,28 +297,31 @@ var splits2 = {};
 var c  = -1;
 if(h !== null){h = localStorage.getItem("helpForget")}else{h=14}; 
 function help(){
-document.getElementById('unsolved').innerHTML = "<p>اضغط على السؤال لتحصل على مساعدة</p><p id='numberOfh'>متبقي عدد مساعدات"+ h +"</p><hr>"
+var unsolved  = document.getElementById('unsolved');
+var slv  = document.getElementById('slv');
+unsolved.innerHTML = "<p>اضغط على السؤال لتحصل على مساعدة</p><p id='numberOfh'>متبقي عدد مساعدات"+ h +"</p><hr>"
 for (word in words){
   if(difference(Object.keys(words),solvedQuestions).indexOf(word) > -1){
-document.getElementById('unsolved').innerHTML += "<p class='unslvd' onclick='solveIt(this.textContent)'>" + words[word] + "</p>";
+unsolved.innerHTML += "<p class='unslvd' onclick='solveIt(this.textContent)'>" + words[word] + "</p>";
   };
 splits2[words[word]] = word.match(/.{1,3}/g);
 //if(word.length <= 9){splits2[words[word]] = (word.match(/.{1,3}/g));}else if (word.length > 9){splits2[words[word]] = (word.match(/.{1,4}/g));}
 }
 var modal2 = document.getElementById("helpDiv");
 var span2 = document.getElementsByClassName("close2")[0];
+
 modal2.style.display = "block";
 span2.onclick = function() {
   modal2.style.display = "none";
-  document.getElementById('unsolved').innerHTML ="";
-  document.getElementById('slv').innerHTML ="الحل<br>";
+  unsolved.innerHTML ="";
+  slv.innerHTML ="الحل<br>";
    c  = -1;
 }
 window.onclick = function(event) {
   if (event.target == modal2) {
     modal2.style.display = "none";
-	document.getElementById('unsolved').innerHTML ="";
-	document.getElementById('slv').innerHTML ="الحل<br>";
+	unsolved.innerHTML ="";
+	slv.innerHTML ="الحل<br>";
 	 c  = -1;
   }}}
 function solveIt(valt){
@@ -285,20 +330,32 @@ if(h>0){
 h--;
 localStorage.setItem("helpForget", h);
 if (c < splits2[valt].length && h > -1 ){
-document.getElementById('slv').innerHTML += splits2[valt][c];
+slv.innerHTML += splits2[valt][c];
 document.getElementById('numberOfh').innerHTML = " متبقي عدد مساعدات :  " + h;
 }}}
 
 var typedItems = [];
+
+
+
 function typeItem(val,idd){
-document.getElementById('sndclick').playbackRate=2;
-document.getElementById('sndclick').play();
-document.getElementById('sndclick').volume = 0.1;
+
+var sndclick  = document.getElementById('sndclick');
+
+sndclick.playbackRate=2;
+sndclick.play();
+sndclick.volume = 0.1;
 document.getElementById(idd).style.visibility = 'hidden';
 typedItems.push(val);
 document.getElementById('txt').value = typedItems.join("");
 document.getElementById('undo1').disabled = false;
 }
+
+
+
+
+
+
 function undo(){
 document.getElementById('txt').value = "";
 for(t in typedItems){
@@ -306,7 +363,7 @@ document.querySelector("input[value='" + typedItems[t] + "']").style.visibility 
              
 //document.getElementsByClassName("visible")[t].style.visibility = 'visible';}   
 typedItems = [];
-if (typedItems.length < 1){document.getElementById('undo1').disabled = true;}
+if (typedItems.length < 1){undo1.disabled = true;}
 };
 </script>
 
@@ -363,7 +420,7 @@ body {
   line-height:50px;
   padding: 0px 20px;
   margin-bottom: 20px;
-  background: #F2F5A9;
+  background: orange;
   box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.2);
 }
 
@@ -446,15 +503,12 @@ body {
     top:30%;
     margin: 5%;
 	text-align:center;
-	
     width: 90%; 
     height: 30%; 
     background-color: rgb(0,0,0); 
     background-color: rgba(0,0,0,0.4); 
   }
   
-  
- 
   .modal-content {
     background-color: #fefefe;
     margin:5% auto; 
@@ -464,40 +518,23 @@ body {
 	height:80%;
 	text-align:center;
   }
-  
   .modal-content span{
    text-align:center;
-   margin:10px;
-   
-   
+   margin:10px; 
   }
   
   #nextLevel{
      width:85%;
-	 
      background-color: blue;
 	 border: 0px;
 	 border-radius:5px;
      color:#fff;
 	 box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.3);
-	 padding:25px;
+	 padding:10px;
 	 font-weight:bold;
 	 cursor: pointer;
    }
     
-	
-	#backLevel{
-     width:80px;
-	 background-color: red;
-	 border: 1px solid black;
-	 border-radius:5px;
-     color:#fff;
-	 box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.12);
-	 padding:5px;
-	 font-weight:bold;
-	 cursor: pointer;
-   }
-   
    #unsolved{
    text-align:center;
    margin:auto;
@@ -515,7 +552,6 @@ body {
      color:#fff;
 	 box-shadow: 0px 7px 10px rgba(0, 0, 0, 0.2);
 	 padding:5px;
-	 
 	 cursor: pointer;
  }
    
@@ -527,7 +563,6 @@ body {
 	  font-size:20px;
    }
    
-  
   #helpDiv {
     display: none; 
     position: fixed; 
@@ -541,7 +576,6 @@ body {
     background-color: rgba(0,0,0,0.4); 
   }
   
-
   .modal-content2 {
     background-color: #fefefe;
     margin: 15% auto; 
@@ -550,7 +584,6 @@ body {
     width: 80%; 
   }
   
-
   .close2 {
     color: #aaa;
     float: right;
@@ -593,8 +626,6 @@ body {
     }
   }
   
-  
-  
   .shk {
   animation: shake 0.5s;
   animation-iteration-count: 1;
@@ -613,10 +644,6 @@ body {
   90% { transform: translate(1px, 2px) rotate(0deg); }
   100% { transform: translate(1px, -2px) rotate(-1deg); }
 }
-
-
-  
-  
 
 #img{
    width:280px;
@@ -639,7 +666,6 @@ a {
   text-align:center;
   left:37%;
   }
-  
   
 @media only screen and (max-width: 700px) {
   
