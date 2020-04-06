@@ -75,6 +75,7 @@
  <footer class="footer">
  <br><input id="backMain" type="button" value="العودة للرئيسية" class="outerbtn2" onclick="backToMain()">
  <p>All Rights Reserved</p>
+ <p id="lockk">&#128274;</p>
  </footer>
 
 
@@ -170,33 +171,34 @@ howPlay.style.display = 'block';
 
 var outerButtons = document.getElementsByClassName('outerbtn');
 for (a = 0; a < objArrayLvl.length; a++){
-prePage.innerHTML += "<input type='button' class='outerbtn' value='"  + " المستوى " + (a+1) + "' onclick='createQuestion(" + 7*a + ")'>";
+prePage.innerHTML += "<button class='outerbtn' onclick='createQuestion(" + 7*a + ")'>المستوى " +  (a+1) + "</button>";
+
+
+//prePage.innerHTML += "<input type='button' class='outerbtn' value='"  + " المستوى " + (a+1) + "' onclick='createQuestion(" + 7*a + ")'>";
 if(a > ret/7 ){
 outerButtons[a].disabled = true;
-outerButtons[a].style.opacity = 0.9;
-outerButtons[a].style.backgroundImage = "url('lock.jpg')";
-outerButtons[a].style.backgroundSize= 'cover';
-outerButtons[a].style.backgroundPosition= "center";
-outerButtons[a].style.color = 'transparent';
+outerButtons[a].style.opacity = 0.5;
+outerButtons[a].innerHTML += "<span style='font-size:20px'>&#128274;</span>";
+
 }
 }
 
 function backToMain(){
 location = location;
-prePage.style.display = 'block';
-howPlay.style.display = 'block';
-main.style.display = 'none';
+prePage.style.display  = 'block';
+howPlay.style.display  = 'block';
+main.style.display     = 'none';
 backMain.style.display = 'none';
 
 }
 
 function createQuestion(va){
-var quiz     = document.getElementById('quiz');
-var choices  = document.getElementById('choices');
-var myModal  = document.getElementById('myModal');
-var backMain = document.getElementById('backMain');
-var main     = document.getElementById('main');
-var nxtlvl = document.getElementById('nxtlvl');
+var quiz     = document.getElementById('quiz'),
+    choices  = document.getElementById('choices'),
+    myModal  = document.getElementById('myModal'),
+    backMain = document.getElementById('backMain'),
+    main     = document.getElementById('main'),
+    nxtlvl   = document.getElementById('nxtlvl');
 
 howPlay.style.display = 'none';
 prePage.style.display = 'none';
@@ -362,7 +364,6 @@ if (splits2[vall].length == 0){document.getElementById('solving').innerHTML   = 
 
 }
 
-
 var typedItems = [];
 function typeItem(val,idd){
 var sndclick  = document.getElementById('sndclick');
@@ -401,6 +402,7 @@ function undo() {
 };
 
 */
+
 </script>
 
 
