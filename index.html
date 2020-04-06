@@ -362,6 +362,7 @@ if (splits2[vall].length == 0){document.getElementById('solving').innerHTML   = 
 
 }
 
+
 var typedItems = [];
 function typeItem(val,idd){
 var sndclick  = document.getElementById('sndclick');
@@ -369,7 +370,7 @@ sndclick.playbackRate=2;
 sndclick.play();
 sndclick.volume = 0.1;
 document.getElementById(idd).style.visibility = 'hidden';
-document.getElementById(idd).classList.add('visible');
+document.getElementById(idd).classList.add('clicked');
 typedItems.push(val);
 document.getElementById('txt').value = typedItems.join("");
 document.getElementById('undo1').disabled = false;
@@ -378,12 +379,28 @@ document.getElementById('undo1').disabled = false;
 
 function undo(){
 document.getElementById('txt').value = "";
-for(t = 0; t < typedItems.length; t++){
-document.querySelector("input[value='" + typedItems[t] + "']").style.visibility = 'visible';}
-//document.getElementsByClassName("visible")[t].style.visibility = 'visible';}   
+//for (t = 0; t < typedItems.length; t++) {document.getElementsByClassName("clicked")[t].style.visibility = 'visible';}  كود خطأ ويسبب مشكلات
+
+// الكود الصحيح
+document.querySelectorAll(".clicked").forEach(el => el.style.visibility = "visible");
+
 typedItems = [];
 if (typedItems.length < 1){undo1.disabled = true;}
 };
+
+
+
+
+/* // هذه الطريقة تعمل أيضا جيداً
+function undo() {
+  var hidden = document.getElementsByClassName("clicked")
+  for (let i = 0;i < hidden.length; i++) {    
+    hidden[i].style.visibility = 'visible';
+  }
+  typedItems = [];
+};
+
+*/
 </script>
 
 
