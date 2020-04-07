@@ -160,7 +160,8 @@ var objArrayLvl =[
 */
 ];
 var h;
-if (h == null){h = 14;localStorage.setItem("helpForget", h)};
+if (localStorage.getItem("helpForget") == null){h = 14;}else{h = localStorage.getItem("helpForget")};
+
 if(ret == null){ret = 0};
 
 var ret = localStorage.getItem("level");
@@ -306,7 +307,6 @@ function difference(a1,a2) {
 
 var splits2 = {};
 var c  = -1;
-if(h !== null){h = localStorage.getItem("helpForget")}else{h=14}; 
 
 function help(){
 document.getElementById('solving').innerHTML   = "";
